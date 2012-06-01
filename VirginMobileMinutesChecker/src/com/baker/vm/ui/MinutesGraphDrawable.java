@@ -20,9 +20,11 @@ public abstract class MinutesGraphDrawable extends ShapeDrawable
 
 	private boolean hasMinutes;
 	private boolean hasDates;
+	private boolean hasData;
 
 	private float minutesPercent;
 	private float datePercent;
+	private float dataPercent;
 
 	private VMAccount account;
 
@@ -49,6 +51,17 @@ public abstract class MinutesGraphDrawable extends ShapeDrawable
 		{
 			minutesPercent = -1;
 			hasMinutes = false;
+		}
+		
+		if(account != null && account.canParseData())
+		{
+			dataPercent = Float.parseFloat(account.getDataUsed()) / Float.parseFloat(account.getDataTotal());
+			hasData = true;
+		}
+		else
+		{
+			dataPercent = -1;
+			hasData = false;
 		}
 
 		if (account != null && account.canParseChargedOnDate())
@@ -93,6 +106,22 @@ public abstract class MinutesGraphDrawable extends ShapeDrawable
 	protected final float getMinutesPercent()
 	{
 		return minutesPercent;
+	}
+	
+	/**
+	 * @return true if the data value is valid
+	 */
+	protected final boolean hasData()
+	{
+		return hasData;
+	}
+	
+	/**
+	 * @return the percent of data the account has used
+	 */
+	protected final float getDataPercent()
+	{
+		return dataPercent;
 	}
 
 	/**

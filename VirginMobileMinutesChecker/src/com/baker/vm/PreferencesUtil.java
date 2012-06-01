@@ -30,6 +30,8 @@ public final class PreferencesUtil
     public static final String CACHE_BALANCE = "cache_balance";
     public static final String CACHE_DUE_DATE = "cache_due_date";
     public static final String CACHE_DATA = "cache_data";
+    public static final String CACHE_DATA_USED = "cache_data_used";
+    public static final String CACHE_DATA_TOTAL = "cache_data_total";
 
     /** Keys in auth preferences. */
     public static final String USER_PREFIX = "USER";
@@ -61,7 +63,9 @@ public final class PreferencesUtil
 
     	return VMAccount.createFromCache(new UsernamePassword(phoneNumber, pass),
     			cache.getString(CACHE_AS_STRING, ""),
-    			cache.getString(CACHE_DUE_DATE, ""));
+    			cache.getString(CACHE_DUE_DATE, ""),
+    			cache.getString(CACHE_DATA_USED, ""),
+    			cache.getString(CACHE_DATA_TOTAL, ""));
     }
 
     public static SharedPreferences getCache(final Context activity)
@@ -92,6 +96,16 @@ public final class PreferencesUtil
 	public static String getDueDate(final Context context)
 	{
         return getCache(context).getString(CACHE_DUE_DATE, "");
+	}
+	
+	public static String getDataUsed(final Context context)
+	{
+		return getCache(context).getString(CACHE_DATA_USED, "");
+	}
+	
+	public static String getDataTotal(final Context context)
+	{
+		return getCache(context).getString(CACHE_DATA_TOTAL, "");
 	}
 	
 	public static String getData(final Context context)
@@ -142,6 +156,8 @@ public final class PreferencesUtil
         editor.putString(CACHE_DUE_DATE, "");
         editor.putString(CACHE_BALANCE, "");
         editor.putString(CACHE_DATA, "");
+        editor.putString(CACHE_DATA_USED, "");
+        editor.putString(CACHE_DATA_TOTAL, "");
     }
 
     public static void setCache(final Context activity, final VMAccount account)
@@ -173,6 +189,8 @@ public final class PreferencesUtil
         
         // Handle data
         editor.putString(CACHE_DATA, account.getDataUsed() + " / " + account.getDataTotal());
+        editor.putString(CACHE_DATA_USED, account.getDataUsed());
+        editor.putString(CACHE_DATA_TOTAL, account.getDataTotal());
 
         editor.commit();
     }

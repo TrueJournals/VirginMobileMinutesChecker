@@ -75,12 +75,16 @@ public final class VMAccount
 
     public static VMAccount createFromCache(final UsernamePassword iAuth,
     										final String iMinutes,
-    										final String iChargedOn)
+    										final String iChargedOn,
+    										final String iDataUsed,
+    										final String iDataTotal)
     {
     	final VMAccount account = new VMAccount(iAuth);
 
     	account.chargedOn = iChargedOn;
     	account.minutesUsed = iMinutes;
+    	account.dataUsed = iDataUsed;
+    	account.dataTotal = iDataTotal;
 
     	return account;
     }
@@ -228,6 +232,12 @@ public final class VMAccount
     public String getDataTotal()
     {
     	return dataTotal;
+    }
+    
+    public boolean canParseData()
+    {
+    	// TODO: Make this do a better job of detecting if the data values are valid or not
+    	return (dataUsed != null && dataTotal != null && !dataUsed.equals("") && !dataTotal.equals(""));
     }
 
 	public UsernamePassword getAuth()

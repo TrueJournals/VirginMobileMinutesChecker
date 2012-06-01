@@ -9,7 +9,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.WindowManager;
 
 import com.baker.vm.PreferencesUtil;
 import com.baker.vm.VMAccount;
@@ -35,6 +37,7 @@ public final class MinutesPieGraphDrawable extends MinutesGraphDrawable
 	private final Context context;
 	private int minDeg;
 	private int dateDeg;
+	private int dataDeg;
 
 	private int alignment = ALIGN_CENTER;
 
@@ -68,6 +71,16 @@ public final class MinutesPieGraphDrawable extends MinutesGraphDrawable
 		{
 			minDeg = 0;
 		}
+		
+		if(hasData())
+		{
+			dataDeg = (int) (getDataPercent() * DEGREES);
+		}
+		else
+		{
+			dataDeg = 0;
+		}
+		
 		if (hasDates())
 		{
 			dateDeg = (int) (getDatePercent() * DEGREES);
@@ -100,6 +113,8 @@ public final class MinutesPieGraphDrawable extends MinutesGraphDrawable
 
 		drawBackground(c, oval);
 		drawMinutesChart(c, oval);
+		
+		drawDataChart(c, oval);
 
 		drawTimeChart(c, oval);
 
@@ -115,13 +130,23 @@ public final class MinutesPieGraphDrawable extends MinutesGraphDrawable
 
     private void drawText(final Canvas c, final Rect clip)
     {
+    	// Scale font size based on screen DPI
+    	WindowManager winManage = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        
+        DisplayMetrics metrics = new DisplayMetrics();
+        
+        winManage.getDefaultDisplay().getMetrics(metrics);
+        
+        int size = (int) (12.0*(metrics.density)); // Defaults to 12, scales smaller or larger based on screen
+        
         final Paint white = new Paint();
         white.setColor(Color.WHITE);
-        white.setTextSize(12);
+        white.setTextSize(size);
 
         final Paint black = new Paint();
         black.setColor(Color.BLACK);
-        black.setTextSize(12);
+        black.setTextSize(size);
+        black.setAntiAlias(true);
 
         String text = ((int) (100 * getMinutesPercent())) + "%";
         text = getAccount().getMinutesTotal() - getAccount().getMinutesUsedInt() + "";
@@ -156,12 +181,14 @@ public final class MinutesPieGraphDrawable extends MinutesGraphDrawable
 
         c.drawOval(clip, p);
     }
-
     private void drawMinutesChart(final Canvas c, final RectF clip)
     {
+    	float newHoriz = ((float)0.25*(clip.right-clip.left));
+    	
         final Paint minPaint = new Paint();
         minPaint.setAlpha(getOpacity());
-        minPaint.setStyle(Paint.Style.FILL);
+        minPaint.setStyle(Paint.Style.STROKE);
+        minPaint.setStrokeWidth(newHoriz); // TODO: Make this variable
         minPaint.setAntiAlias(true);
         if (dateDeg < (minDeg * 1.05F) && dateDeg > (minDeg * .95F))
         {
@@ -175,8 +202,44 @@ public final class MinutesPieGraphDrawable extends MinutesGraphDrawable
         {
             minPaint.setColor(context.getResources().getColor(R.color.info));
         }
+        
+        RectF minClip = new RectF(clip.left + newHoriz/(float)2.0,
+        							clip.top + newHoriz/(float)2.0, 
+        							clip.right - newHoriz/(float)2.0, 
+        							clip.bottom - newHoriz/(float)2.0);
 
-        c.drawArc(clip, 0, minDeg, true, minPaint);
+        c.drawArc(minClip, 0, minDeg, false, minPaint);
+    }
+    
+    private void drawDataChart(final Canvas c, final RectF clip)
+    {
+    	final Paint dataPaint = new Paint();
+    	dataPaint.setAlpha(getOpacity());
+    	dataPaint.setStyle(Paint.Style.FILL);
+    	dataPaint.setAntiAlias(true);
+    	
+    	if (dateDeg < (dataDeg * 1.05F) && dateDeg > (dataDeg * .95F))
+        {
+            dataPaint.setColor(context.getResources().getColor(R.color.warning));
+        }
+        else if (dateDeg < dataDeg)
+        {
+            dataPaint.setColor(context.getResources().getColor(R.color.error));
+        }
+        else
+        {
+            dataPaint.setColor(context.getResources().getColor(R.color.info));
+        }
+    	
+    	float newHoriz = ((float)0.25*(clip.right-clip.left));
+    	float newVert = ((float)0.25*(clip.bottom-clip.top));
+    	
+    	RectF dataClip = new RectF(clip.left+newHoriz, clip.top+newVert, clip.right-newHoriz, clip.bottom-newVert);
+    	
+    	// Draw a bounding circle for data
+    	drawStroke(c, dataClip);
+
+        c.drawArc(dataClip, 0, dataDeg, true, dataPaint);
     }
 
     private void drawTimeChart(final Canvas c, final RectF clip)
