@@ -28,16 +28,14 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup.LayoutParams;
 import android.widget.TextView;
-import android.util.Log;
-import android.content.pm.PackageManager.NameNotFoundException;
 
 import com.baker.vm.PreferencesUtil;
 import com.baker.vm.UsernamePassword;
 import com.baker.vm.VMAccount;
-import com.jaygoel.virginminuteschecker.R;
+import com.google.ads.AdRequest;
+import com.google.ads.AdView;
 import com.jaygoel.virginminuteschecker.Preferences;
-
-import com.google.ads.*;
+import com.jaygoel.virginminuteschecker.R;
 
 /**
  * @author baker

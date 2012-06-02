@@ -7,8 +7,6 @@ import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 import android.text.format.DateFormat;
 
-import com.jaygoel.virginminuteschecker.R;
-
 import com.baker.vm.ui.MultipleAccountsActivity;
 
 public final class PreferencesUtil
