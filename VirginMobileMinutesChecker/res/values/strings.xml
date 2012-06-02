@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Minutes Checker for Virgin Mobile</string>
-    <string name="service_name">Minutes Checker Service</string>
     <string name="login">Sign In</string>
     <string name="logout">Sign Out</string>
     <string name="refresh">Refresh</string>
-    <string name="loadingMessage">Loading Usage Information...</string>
+    <string name="loadingMessage">Loading Usage Information&#8230;</string>
     <string name="loginFail">Could not retrieve your usage information. Make sure you have a connection and  
     						that your username and password are correct!</string>
-    <string name="signinTitle">Minutes Checker: Sign In</string>
     <string name="viewTitle">Minutes Checker: Usage Information</string>
 
     <string name="settings">Preferences</string>
@@ -30,7 +28,6 @@
 
     <string name="phoneNumberLabel">Phone Number:</string>
     <string name="passwordLabel">Password (vKey or PIN):</string>
-    <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="currentBalance">Balance:</string>
     <string name="minutesUsed">Min Used:</string>
@@ -43,7 +40,7 @@
     <string name="notify_remaing_minutes">Notify of Remaining Minutes</string>
     
     <string name="minutes_left">Minutes Remaining: %1$s</string><string name="minutes_over">Minutes Over: %1$s!</string>
-    <string name="loading">Loading...</string>
+    <string name="loading">Loading&#8230;</string>
     <string name="lastUpdated">last updated%1$s</string>
     <string name="widget2x1">Minutes Account Information</string>
     <string name="widgetpie1x1">Minutes Pie Graph</string>
@@ -68,5 +65,6 @@
     <string name="currentVersion">1.11</string>
     <string name="currentVersionSummary">Updated in this version: \n\n - Fix issues due to VM\'s website updates. Thanks to everyone who let me know! \n\n This means you can go back and update your ratings to 5 stars again :) \n\n Many have asked if this app will be updated to reflect VM\'s data cap. I hope to do this, but we\'ll have wait until the cap is implemented before developing. \n\n For the Android developers out there: this app is open-source, so please feel free to fork on github! There are a lot of feature requests and plenty of opportunity to lend your expertise.</string>
     <string name="dataUsed">Data Used:</string>
+    <string name="placeholder">PLACEHOLDER</string>
 
 </resources>
