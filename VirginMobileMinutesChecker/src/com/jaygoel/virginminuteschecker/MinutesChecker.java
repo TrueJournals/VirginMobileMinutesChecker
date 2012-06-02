@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.widget.EditText;
+import android.view.View;
 
 public class MinutesChecker extends Activity
 {
@@ -44,7 +45,7 @@ public class MinutesChecker extends Activity
 
     }
 
-    public void Login()
+    public void Login(View view)
     {
 
         String username = ((EditText) findViewById(R.id.username)).getText()
