@@ -88,15 +88,13 @@ public class WebsiteScraper {
          } else {
             line = sb.substring(mainContentIndex);
          }
-
-         connection.disconnect();
          
          // Now, try to grab data usage
          String cookies = "";
          // 1. Grab and store cookies
          String headerName=null;
          for (int i=1; (headerName = connection.getHeaderFieldKey(i))!=null; i++) {
-        	 if (headerName.equals("Set-Cookie")) {
+        	 if(headerName.equalsIgnoreCase("Set-Cookie")) {
         		 String cookie = connection.getHeaderField(i);
         		 cookie = cookie.substring(0, cookie.indexOf(";"));
         		 String cookieName = cookie.substring(0, cookie.indexOf("="));
@@ -104,6 +102,8 @@ public class WebsiteScraper {
         		 cookies = cookies + cookieName + "=" + cookieValue + "; ";
     		 }
          }
+         
+         connection.disconnect();
           
          // 2. Grab the next page
          connection = (HttpsURLConnection) new URL("https://www1.virginmobileusa.com/myaccount/dataPlanHistory.do").openConnection();
