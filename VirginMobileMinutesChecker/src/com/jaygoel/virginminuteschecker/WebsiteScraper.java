@@ -17,8 +17,9 @@ import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
 
 public class WebsiteScraper {
 
-   public static String fetchScreen(String username, String password) {
+   public static String[] fetchScreen(String username, String password) {
       String line = "";
+      String dataPage = "";
 
       try {
          TrustManager[] trustAllCerts = new TrustManager[]{
@@ -123,8 +124,7 @@ public class WebsiteScraper {
          buff = new BufferedReader(in);
      
          sb = new StringBuilder();
-     
-         String dataPage;
+         
          while ((dataPage = buff.readLine()) != null) {
         	 sb.append(dataPage);
          }
@@ -139,9 +139,9 @@ public class WebsiteScraper {
          dataPage = sb.toString();
               
          // Simply concat the output with our data page output
-         if(line != null) {
-        	 line = line + dataPage;
-         }
+         //if(line != null) {
+         //	 line = line + dataPage;
+         //}
 
          connection.disconnect();
       } catch (Exception e) {
@@ -149,15 +149,18 @@ public class WebsiteScraper {
          //System.err.println("exception 83");
          //System.err.println(e.getMessage());
          //System.err.println(line);
-         return line;
+         return new String[] { line, dataPage };
          //rc.put("isValid", "FALSE");
       }
       //line = null;
       if (line == null) {
          line = "";
       }
+      if (dataPage == null) {
+    	  dataPage = "";
+      }
       //System.err.println(line);
-      return line;
+      return new String[] { line, dataPage };
    }
 
 
@@ -273,11 +276,11 @@ public class WebsiteScraper {
 
    public static Map<String, String> getInfo(String username, String password) {
 
-      String line = fetchScreen(username, password);
+      String[] pages = fetchScreen(username, password);
       // Log.d("DEBUG", "Line: "+line);
 
 
-      return parseInfo(line);
+      return parseInfo(pages[0]);
 
    }
 

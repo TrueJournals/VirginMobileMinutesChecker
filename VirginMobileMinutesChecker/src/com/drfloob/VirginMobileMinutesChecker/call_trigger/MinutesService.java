@@ -106,9 +106,9 @@ public class MinutesService extends Service
         }
         else
         {
-            String html = WebsiteScraper.fetchScreen(username, password);
+            String[] pages = WebsiteScraper.fetchScreen(username, password);
             // Log.d(TAG, html);
-            IVMCScraper scraper = new ReferenceScraper(html);
+            IVMCScraper scraper = new ReferenceScraper(pages[0], pages[1]);
 
             if (scraper.isValid())
             {

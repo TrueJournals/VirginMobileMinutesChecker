@@ -87,7 +87,7 @@ public final class VMAccount
     	return account;
     }
 
-    public VMAccount(final UsernamePassword iAuth, final String html, final IVMCScraper scraper)
+    public VMAccount(final UsernamePassword iAuth, final IVMCScraper scraper)
     {
     	auth = iAuth;
         isValid = scraper.isValid();

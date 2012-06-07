@@ -30,14 +30,15 @@ public final class ScraperUtil
         {
             try
             {
-                final String html= WebsiteScraper.fetchScreen(a.user, a.pass);
-                IVMCScraper scraper = new ReferenceScraper(html);
-                Log.d(TAG, html);
+                final String[] pages = WebsiteScraper.fetchScreen(a.user, a.pass);
+                IVMCScraper scraper = new ReferenceScraper(pages[0], pages[1]);
+                Log.d(TAG, pages[0]);
+                Log.d(TAG, pages[1]);
 
                 if (scraper.isValid())
                 {
                     Log.d(TAG, "valid");
-                    acct = new VMAccount(a, html, scraper);
+                    acct = new VMAccount(a, scraper);
                 }
                 else
                 {

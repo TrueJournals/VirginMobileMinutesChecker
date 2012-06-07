@@ -72,9 +72,10 @@ public class UpdateService extends Service {
     	    minutes= "Not Logged In";
     	    Log.d(TAG, "Not Logged In");
     	} else {
-    	    String html= WebsiteScraper.fetchScreen(username, password);
-    	    Log.d(TAG, html);
-    	    IVMCScraper scraper= new ReferenceScraper(html);
+    	    String[] pages = WebsiteScraper.fetchScreen(username, password);
+    	    Log.d(TAG, pages[0]);
+    	    Log.d(TAG, pages[1]);
+    	    IVMCScraper scraper= new ReferenceScraper(pages[0], pages[1]);
     	    
     	    if (scraper.isValid()) {
     		Log.d(TAG, "valid");
