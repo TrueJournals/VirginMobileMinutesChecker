@@ -4,6 +4,8 @@
 package com.baker.vm.ui;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +30,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup.LayoutParams;
 import android.widget.TextView;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.content.pm.PackageManager.NameNotFoundException;
 
@@ -240,21 +243,25 @@ public final class MultipleAccountsActivity extends Activity
                                          R.string.monthlyCharge,
                                          R.string.dataUsed);
 
-                String balance = "";
-                String minutes = "";
-                String dueDate = "";
-                String data = "";
+                float balance = 0;
+                int minutesUsed = 0;
+                int minutesTotal = 0;
+                Calendar dueDate = new GregorianCalendar();
+                int dataUsed = 0;
+                int dataTotal = 0;
                 if (getUsersTelephoneNumber().equals(auth.user))
                 {
                     balance = PreferencesUtil.getBalance(this);
-                    minutes = PreferencesUtil.getMinutesString(this);
-                    dueDate = PreferencesUtil.getDueDate(this);
-                    data = PreferencesUtil.getData(this);
+                    minutesUsed = PreferencesUtil.getMinutesUsed(this);
+                    minutesTotal = PreferencesUtil.getMinutesTotal(this);
+                    dueDate.setTimeInMillis(PreferencesUtil.getDueDate(this));
+                    dataUsed = PreferencesUtil.getDataUsed(this);
+                    dataTotal = PreferencesUtil.getDataTotal(this);
                 }
-                addRow(table, R.string.currentBalance, balance, widest, true);
-                addRow(table, R.string.minutesUsed, minutes, widest, true);
-                addRow(table, R.string.dataUsed, data, widest, true);
-                addRow(table, R.string.chargedOn, dueDate, widest, true);
+                addRow(table, R.string.currentBalance, String.format("%.2f", balance), widest, true);
+                addRow(table, R.string.minutesUsed, String.format("%d / %d", minutesUsed, minutesTotal), widest, true);
+                addRow(table, R.string.dataUsed, String.format("%d / %d MB", dataUsed, dataTotal), widest, true);
+                addRow(table, R.string.chargedOn, DateFormat.format("MM/dd/yy", dueDate).toString(), widest, true);
                 addRow(table, R.string.monthlyCharge, "", widest, true);
             }
 
@@ -298,11 +305,11 @@ public final class MultipleAccountsActivity extends Activity
                                          R.string.chargedOn,
                                          R.string.monthlyCharge,
                                          R.string.dataUsed);
-                addRow(table, R.string.currentBalance, acct.getBalance(), widest, false);
-                addRow(table, R.string.minutesUsed, acct.getMinutesUsed(), widest, false);
+                addRow(table, R.string.currentBalance, String.valueOf(acct.getBalance()), widest, false);
+                addRow(table, R.string.minutesUsed, acct.getMinutesUsed() + " / " + acct.getMinutesTotal(), widest, false);
                 addRow(table, R.string.dataUsed, acct.getDataUsed() + " / " + acct.getDataTotal(), widest, false);
-                addRow(table, R.string.chargedOn, acct.getChargedOn(), widest, false);
-                addRow(table, R.string.monthlyCharge, acct.getMonthlyCharge(), widest, false);
+                addRow(table, R.string.chargedOn, DateFormat.format("MM/dd/yy", acct.getChargedOn()).toString(), widest, false);
+                addRow(table, R.string.monthlyCharge, String.format("$%.2f", acct.getMonthlyCharge()), widest, false);
 
                 final MinutesPieGraphDrawable bg = new MinutesPieGraphDrawable(this, acct);
                 bg.setAlignment(MinutesPieGraphDrawable.ALIGN_RIGHT);

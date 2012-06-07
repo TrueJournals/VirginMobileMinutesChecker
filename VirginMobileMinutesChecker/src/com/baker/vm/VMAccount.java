@@ -2,8 +2,8 @@ package com.baker.vm;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+//import java.util.regex.Matcher;
+//import java.util.regex.Pattern;
 
 import com.jaygoel.virginminuteschecker.IVMCScraper;
 
@@ -13,9 +13,9 @@ import com.jaygoel.virginminuteschecker.IVMCScraper;
  */
 public final class VMAccount
 {
-
-	private static final Pattern DATE_PAT = Pattern.compile("(\\d\\d)/(\\d\\d)/(\\d\\d)");
-    private static final Pattern MINUTES_PAT = Pattern.compile("(\\d+)\\s*/\\s*(\\d+)");
+	// If all goes as planned... I won't need these anymore
+	//private static final Pattern DATE_PAT = Pattern.compile("(\\d\\d)/(\\d\\d)/(\\d\\d)");
+    //private static final Pattern MINUTES_PAT = Pattern.compile("(\\d+)\\s*/\\s*(\\d+)");
 
     public static VMAccount createInvalid(final UsernamePassword iAuth)
     {
@@ -26,14 +26,14 @@ public final class VMAccount
     {
         final VMAccount ret = new VMAccount(new UsernamePassword("5555215554", "password"));
 
-        ret.monthlyCharge = "$40.00";
-        ret.balance = "$0.00";
-        ret.minAmountDue = "$0.00";
-        ret.dueDate = "05/15/11";
-        ret.chargedOn = "05/15/11";
-        ret.minutesUsed = "400 / 1200";
-        ret.dataUsed = "345.0";
-        ret.dataTotal = "2560.0";
+        ret.monthlyCharge = (float) 40.00;
+        ret.balance = (float) 0.00;
+        ret.chargedOn = new GregorianCalendar(2011, 05, 15);
+        ret.newMonthStarts = new GregorianCalendar(2011, 05, 16);
+        ret.minutesUsed = 400;
+        ret.minutesTotal = 1200;
+        ret.dataUsed = 345;
+        ret.dataTotal = 2560;
         ret.isValid = true;
 
         return ret;
@@ -43,14 +43,14 @@ public final class VMAccount
     {
     	final VMAccount ret = new VMAccount(auth);
 
-    	ret.monthlyCharge = "$40.00";
-    	ret.balance = "$0.00";
-    	ret.minAmountDue = "$0.00";
-    	ret.dueDate = "04/25/11";
-    	ret.chargedOn = "04/25/11";
-    	ret.minutesUsed = "650 / 1200";
-    	ret.dataUsed = "345.0";
-        ret.dataTotal = "2560.0";
+    	ret.monthlyCharge = (float) 40.00;
+    	ret.balance = (float) 0.00;
+    	ret.chargedOn = new GregorianCalendar(2011, 4, 25);
+    	ret.newMonthStarts = new GregorianCalendar(2011, 4, 26);
+    	ret.minutesUsed = 650;
+    	ret.minutesTotal = 1200;
+    	ret.dataUsed = 345;
+        ret.dataTotal = 2560;
     	ret.isValid = true;
 
     	return ret;
@@ -60,27 +60,29 @@ public final class VMAccount
     {
     	final VMAccount ret = new VMAccount(new UsernamePassword("5555555555", "test"));
 
-    	ret.monthlyCharge = "$40.00";
-    	ret.balance = "$0.00";
-    	ret.minAmountDue = "$0.00";
-    	ret.dueDate = "04/31/11";
-    	ret.chargedOn = "04/31/11";
-    	ret.minutesUsed = "400 / 1200";
-    	ret.dataUsed = "345.0";
-        ret.dataTotal = "2560.0";
+    	ret.monthlyCharge = (float) 40.00;
+    	ret.balance = (float) 0.00;
+    	ret.chargedOn = new GregorianCalendar(4, 31, 11);
+    	ret.newMonthStarts = new GregorianCalendar(5, 1, 11);
+    	ret.minutesUsed = 400;
+    	ret.minutesTotal = 1200;
+    	ret.dataUsed = 345;
+        ret.dataTotal = 2560;
     	ret.isValid = true;
 
     	return ret;
     }
 
     public static VMAccount createFromCache(final UsernamePassword iAuth,
-    										final String iMinutes,
-    										final String iChargedOn)
+    										final int iMinutesUsed,
+    										final int iMinutesTotal,
+    										final Calendar iChargedOn)
     {
     	final VMAccount account = new VMAccount(iAuth);
 
     	account.chargedOn = iChargedOn;
-    	account.minutesUsed = iMinutes;
+    	account.minutesUsed = iMinutesUsed;
+    	account.minutesTotal = iMinutesTotal;
 
     	return account;
     }
@@ -88,30 +90,30 @@ public final class VMAccount
     public VMAccount(final UsernamePassword iAuth, final String html, final IVMCScraper scraper)
     {
     	auth = iAuth;
-        isValid = scraper.isValid(html);
+        isValid = scraper.isValid();
         if (isValid)
         {
-            number = scraper.getPhoneNumber(html);
-            monthlyCharge = scraper.getMonthlyCharge(html);
-            balance = scraper.getCurrentBalance(html);
-            minAmountDue = scraper.getMinAmountDue(html);
-            dueDate = scraper.getDateDue(html);
-            chargedOn = scraper.getChargedOn(html);
-            minutesUsed = scraper.getMinutesUsed(html);
-            dataUsed = scraper.getDataUsed(html);
-            dataTotal = scraper.getDataTotal(html);
+            number = scraper.getPhoneNumber();
+            monthlyCharge = scraper.getMonthlyCharge();
+            balance = scraper.getCurrentBalance();
+            chargedOn = scraper.getChargedOn();
+            newMonthStarts = scraper.getNewMonthStarts();
+            minutesUsed = scraper.getMinutesUsed();
+            minutesTotal = scraper.getMinutesTotal();
+            dataUsed = scraper.getDataUsed();
+            dataTotal = scraper.getDataTotal();
         }
         else
         {
             number = null;
-            monthlyCharge = null;
-            balance = null;
-            minAmountDue = null;
-            dueDate = null;
+            monthlyCharge = (float) 0;
+            balance = (float) 0;
             chargedOn = null;
-            minutesUsed = null;
-            dataUsed = null;
-            dataTotal = null;
+            newMonthStarts = null;
+            minutesUsed = 0;
+            minutesTotal = 0;
+            dataUsed = 0;
+            dataTotal = 0;
         }
     }
 
@@ -120,27 +122,38 @@ public final class VMAccount
     	auth = iAuth;
         isValid = false;
         number = auth.user;
-        monthlyCharge = null;
-        balance = null;
-        minAmountDue = null;
-        dueDate = null;
+        monthlyCharge = (float) 0;
+        balance = (float) 0;
         chargedOn = null;
-        minutesUsed = null;
-        dataUsed = null;
-        dataTotal = null;
+        newMonthStarts = null;
+        minutesUsed = 0;
+        minutesTotal = 0;
+        dataUsed = 0;
+        dataTotal = 0;
     }
 
     private final UsernamePassword auth;
     private boolean isValid;
+    /*
     private String number;
     private String monthlyCharge;
     private String balance;
-    private String minAmountDue;
-    private String dueDate;
+    private String minAmountDue;		// Removed -- it's no longer a part of VM's site, and not displayed anywhere in-app
+    private String dueDate;				// Removed -- it's been renamed to dueDate, it would seem
     private String chargedOn;
     private String minutesUsed;
     private String dataUsed;
     private String dataTotal;
+    */
+    private String number;			// Phone number stays as String -- it's a string of digits, not an interpretable number
+    private float monthlyCharge;	// Monthly charge is a dollar amount
+    private float balance;			// Another dollar amount
+    private Calendar chargedOn;			// "You will be charged on" date. Represented as... a date!
+    private Calendar newMonthStarts;	// New: the "New month starts" date. Should help with some of the date calculations
+    private int minutesUsed;		// An interpretable number -- number of minutes used up so far this month
+    private int minutesTotal;		// New: store the total number of minutes, since we're no longer storing used as string x/y
+    private int dataUsed;			// While this is displayed as xxx.0 MB on VM's website, it's always .0, so we don't need a float
+    private int dataTotal;			// Same as dataUsed
 
     public boolean isValid()
     {
@@ -151,81 +164,43 @@ public final class VMAccount
     {
         return number;
     }
-    public String getMonthlyCharge()
+    
+    public float getMonthlyCharge()
     {
         return monthlyCharge;
     }
-    public String getBalance()
+    
+    public float getBalance()
     {
         return balance;
     }
-    public String getMinAmountDue()
-    {
-        return minAmountDue;
-    }
-    public String getDueDate()
-    {
-        return dueDate;
-    }
-    public String getChargedOn()
+    
+    public Calendar getChargedOn()
     {
         return chargedOn;
     }
-    public boolean canParseChargedOnDate()
+    
+    public Calendar getNewMonthStarts()
     {
-    	return DATE_PAT.matcher(getChargedOn() == null ? "" : getChargedOn()).matches();
+    	return newMonthStarts;
     }
-    public Calendar getChargedOnCal()
-    {
-    	final Matcher m = DATE_PAT.matcher(getChargedOn());
-    	Calendar cal = null;
-    	if (m.matches())
-    	{
-    		// This won't throw NumberFormatExceptions because the matches must be digits
-    		cal = new GregorianCalendar(Integer.parseInt("20" + m.group(3)),
-    									Integer.parseInt(m.group(1)) - 1,
-    									Integer.parseInt(m.group(2)),
-    									23,
-    									59);
-    	}
-
-    	return cal;
-    }
-    public String getMinutesUsed()
+    
+    public int getMinutesUsed()
     {
         return minutesUsed;
     }
-    public boolean canParseMinutes()
-    {
-    	return MINUTES_PAT.matcher(getMinutesUsed() == null ? "" : getMinutesUsed()).matches();
-    }
-    public int getMinutesUsedInt()
-    {
-    	int used = -1;
-    	final Matcher m = MINUTES_PAT.matcher(getMinutesUsed());
-    	if (m.matches())
-    	{
-    		used = Integer.parseInt(m.group(1));
-    	}
-    	return used;
-    }
+    
     public int getMinutesTotal()
     {
-    	int total = -1;
-    	final Matcher m = MINUTES_PAT.matcher(getMinutesUsed());
-    	if (m.matches())
-    	{
-    		total = Integer.parseInt(m.group(2));
-    	}
-    	return total;
+    	return minutesTotal;
     }
     
-    public String getDataUsed()
+    public int getDataUsed()
     {
     	return dataUsed;
     }
     
-    public String getDataTotal()
+    public int getDataTotal()
     {
     	return dataTotal;
     }

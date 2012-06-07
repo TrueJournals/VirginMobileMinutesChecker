@@ -82,12 +82,15 @@ public class WebsiteScraper {
             sb.append(line);
          }
 
+         /*
          int mainContentIndex = sb.indexOf("id=\"mainContent\"");
          if (mainContentIndex == -1) {
             line = "";
          } else {
             line = sb.substring(mainContentIndex);
          }
+         */
+         line = sb.toString();
          
          // Now, try to grab data usage
          String cookies = "";
@@ -125,13 +128,15 @@ public class WebsiteScraper {
          while ((dataPage = buff.readLine()) != null) {
         	 sb.append(dataPage);
          }
-          
+         
+         /*
          int dataContentIndex = sb.indexOf("id=\"mainContent\"");
          if (dataContentIndex == -1) {
         	 dataPage = "";
          } else {
         	 dataPage = sb.substring(dataContentIndex);
-         }
+         }*/
+         dataPage = sb.toString();
               
          // Simply concat the output with our data page output
          if(line != null) {

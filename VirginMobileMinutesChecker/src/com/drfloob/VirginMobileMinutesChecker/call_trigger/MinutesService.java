@@ -108,12 +108,12 @@ public class MinutesService extends Service
         {
             String html = WebsiteScraper.fetchScreen(username, password);
             // Log.d(TAG, html);
-            IVMCScraper scraper = new ReferenceScraper();
+            IVMCScraper scraper = new ReferenceScraper(html);
 
-            if (scraper.isValid(html))
+            if (scraper.isValid())
             {
                 Log.d(TAG, "valid");
-                minutes = scraper.getMinutesUsed(html);
+                minutes = String.format("%d / %d", scraper.getMinutesUsed(), scraper.getMinutesTotal());
                 Log.d(TAG, minutes);
 
                 SharedPreferences.Editor cedit = cache.edit();

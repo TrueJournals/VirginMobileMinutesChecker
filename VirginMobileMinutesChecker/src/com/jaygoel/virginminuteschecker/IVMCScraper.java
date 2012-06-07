@@ -1,17 +1,19 @@
 package com.jaygoel.virginminuteschecker;
 
+import java.util.Calendar;
+
 /**
  * Interface for VirginMobileChecker's Website Scraper
  */
 public interface IVMCScraper {
-    boolean isValid(String str);
-    String getPhoneNumber(String str);
-    String getMonthlyCharge(String str);
-    String getCurrentBalance(String str);
-    String getMinAmountDue(String str);
-    String getDateDue(String str);
-    String getChargedOn(String str);
-    String getMinutesUsed(String str);
-    String getDataUsed(String str);
-    String getDataTotal(String str);
+    boolean isValid();
+    String getPhoneNumber();
+    float getMonthlyCharge();
+    float getCurrentBalance();
+    Calendar getChargedOn();
+    Calendar getNewMonthStarts();
+    int getMinutesUsed();
+    int getMinutesTotal();
+    int getDataUsed();
+    int getDataTotal();
 }

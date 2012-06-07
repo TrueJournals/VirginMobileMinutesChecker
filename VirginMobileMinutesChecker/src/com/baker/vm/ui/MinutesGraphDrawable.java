@@ -39,10 +39,10 @@ public abstract class MinutesGraphDrawable extends ShapeDrawable
 	{
 		account = iAccount;
 
-		if (account != null && account.canParseMinutes())
+		if (account != null && account.isValid())
 		{
-			minutesPercent =
-				account.getMinutesUsedInt() / (float) account.getMinutesTotal();
+			minutesPercent = 
+				account.getMinutesUsed() / (float) account.getMinutesTotal();
 			hasMinutes = true;
 		}
 		else
@@ -51,9 +51,9 @@ public abstract class MinutesGraphDrawable extends ShapeDrawable
 			hasMinutes = false;
 		}
 
-		if (account != null && account.canParseChargedOnDate())
+		if (account != null && account.isValid())
 		{
-			final Calendar end = account.getChargedOnCal();
+			final Calendar end = account.getNewMonthStarts(); // This will be more accurate for our timing, and should end the "negative time" problem
 			final Calendar start = (Calendar) end.clone();
 			start.add(Calendar.MONTH, -1);
             start.set(Calendar.HOUR_OF_DAY, 0);
