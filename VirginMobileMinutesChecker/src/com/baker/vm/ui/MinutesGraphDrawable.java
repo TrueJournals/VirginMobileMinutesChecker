@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import android.graphics.drawable.ShapeDrawable;
+import android.text.format.DateFormat;
 
 import com.baker.vm.VMAccount;
 
@@ -76,7 +77,8 @@ public abstract class MinutesGraphDrawable extends ShapeDrawable
 
 	private String toString(final Calendar end)
 	{
-		return end.get(Calendar.MONTH) + "/" + end.get(Calendar.DAY_OF_MONTH) + "/" + end.get(Calendar.YEAR) + " " + end.get(Calendar.HOUR_OF_DAY) + ":" + end.get(Calendar.MINUTE);
+		//return end.get(Calendar.MONTH) + "/" + end.get(Calendar.DAY_OF_MONTH) + "/" + end.get(Calendar.YEAR) + " " + end.get(Calendar.HOUR_OF_DAY) + ":" + end.get(Calendar.MINUTE);
+		return DateFormat.format("MM/dd/yy", end).toString();
 	}
 
 	/**

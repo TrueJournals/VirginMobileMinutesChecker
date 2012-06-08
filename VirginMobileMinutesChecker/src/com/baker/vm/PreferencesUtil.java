@@ -31,6 +31,7 @@ public final class PreferencesUtil
     public static final String CACHE_MINUTES_TOTAL = "cache_minutes_total";
     public static final String CACHE_BALANCE = "cache_balance";
     public static final String CACHE_DUE_DATE = "cache_due_date";
+    public static final String CACHE_MONTH_STARTS = "cache_month_starts";
     public static final String CACHE_DATA_USED = "cache_data_used";
     public static final String CACHE_DATA_TOTAL = "cache_data_total";
 
@@ -62,13 +63,13 @@ public final class PreferencesUtil
     	final String phoneNumber = getDefaultTelephoneNumber(activity);
     	final String pass = getPassword(activity, phoneNumber);
     	
-    	final GregorianCalendar dueDate = new GregorianCalendar();
-    	dueDate.setTimeInMillis(cache.getLong(CACHE_DUE_DATE, 0));
+    	final GregorianCalendar monthStarts = new GregorianCalendar();
+    	monthStarts.setTimeInMillis(cache.getLong(CACHE_MONTH_STARTS, 0));
 
     	return VMAccount.createFromCache(new UsernamePassword(phoneNumber, pass),
     			cache.getInt(CACHE_MINUTES_USED, 0),
     			cache.getInt(CACHE_MINUTES_TOTAL, 0),
-    			dueDate);
+    			monthStarts);
     }
 
     public static SharedPreferences getCache(final Context activity)
@@ -94,6 +95,11 @@ public final class PreferencesUtil
 	public static long getDueDate(final Context context)
 	{
         return getCache(context).getLong(CACHE_DUE_DATE, -1);
+	}
+	
+	public static long getMonthStarts(final Context context)
+	{
+		return getCache(context).getLong(CACHE_MONTH_STARTS, -1);
 	}
 	
 	public static int getDataUsed(final Context context)
@@ -146,6 +152,7 @@ public final class PreferencesUtil
         editor.putInt(CACHE_MINUTES_TOTAL, -1);
 
         editor.putLong(CACHE_DUE_DATE, -1);
+        editor.putLong(CACHE_MONTH_STARTS, -1);
         editor.putFloat(CACHE_BALANCE, -1);
         
         editor.putInt(CACHE_DATA_USED, -1);
@@ -176,6 +183,7 @@ public final class PreferencesUtil
 
         // Handle due date
         editor.putLong(CACHE_DUE_DATE, account.getChargedOn().getTimeInMillis());
+        editor.putLong(CACHE_MONTH_STARTS, account.getNewMonthStarts().getTimeInMillis());
 
         editor.putLong(CACHE_TS, System.currentTimeMillis());
         

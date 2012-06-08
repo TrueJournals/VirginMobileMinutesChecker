@@ -76,13 +76,14 @@ public final class VMAccount
     public static VMAccount createFromCache(final UsernamePassword iAuth,
     										final int iMinutesUsed,
     										final int iMinutesTotal,
-    										final Calendar iChargedOn)
+    										final Calendar iMonthStarts)
     {
     	final VMAccount account = new VMAccount(iAuth);
 
-    	account.chargedOn = iChargedOn;
+    	account.isValid = true;
     	account.minutesUsed = iMinutesUsed;
     	account.minutesTotal = iMinutesTotal;
+    	account.newMonthStarts = iMonthStarts;
 
     	return account;
     }
