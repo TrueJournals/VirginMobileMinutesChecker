@@ -72,13 +72,14 @@ public class UpdateService extends Service {
     	    minutes= "Not Logged In";
     	    Log.d(TAG, "Not Logged In");
     	} else {
-    	    String html= WebsiteScraper.fetchScreen(username, password);
-    	    Log.d(TAG, html);
-    	    IVMCScraper scraper= new ReferenceScraper();
+    	    String[] pages = WebsiteScraper.fetchScreen(username, password);
+    	    Log.d(TAG, pages[0]);
+    	    Log.d(TAG, pages[1]);
+    	    IVMCScraper scraper= new ReferenceScraper(pages[0], pages[1]);
     	    
-    	    if (scraper.isValid(html)) {
+    	    if (scraper.isValid()) {
     		Log.d(TAG, "valid");
-    		minutes= scraper.getMinutesUsed(html);
+    		minutes= String.valueOf(scraper.getMinutesUsed());
     		Log.d(TAG, minutes);
 
     		SharedPreferences.Editor cedit= cache.edit();

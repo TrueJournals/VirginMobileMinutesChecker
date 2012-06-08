@@ -145,8 +145,7 @@ public final class MinutesPieGraphDrawable extends MinutesGraphDrawable
         black.setTextSize((int) (12.0*(density))); // Scale font size based on density
         black.setAntiAlias(true);
 
-        //String text = ((int) (100 * getMinutesPercent())) + "%";
-        String text = getAccount().getMinutesTotal() - getAccount().getMinutesUsedInt() + "";
+        String text = getAccount().getMinutesTotal() - getAccount().getMinutesUsed() + "";
 
         final int textHeight = (int) black.getFontMetrics().top / 2;
 

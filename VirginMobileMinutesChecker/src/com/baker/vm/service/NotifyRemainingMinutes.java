@@ -89,8 +89,8 @@ public final class NotifyRemainingMinutes extends BroadcastReceiver
     private void toastRemainingMinutes(final Context context)
     {
         int used = PreferencesUtil.getMinutesUsed(context);
-        int total = PreferencesUtil.getCacheMinutesTotal(context);
-        String minutes = PreferencesUtil.getMinutesString(context);
+        int total = PreferencesUtil.getMinutesTotal(context);
+        String minutes = used + " / " + total;
 
         if (minutes == null || minutes.length() == 0)
         {
@@ -147,7 +147,7 @@ public final class NotifyRemainingMinutes extends BroadcastReceiver
                 
                 WidgetUtil.updateAllWidgets(context);
                 
-                Log.d(TAG, "Updated Cache Minutes To: " + (acct.getMinutesTotal() - acct.getMinutesUsedInt()));
+                Log.d(TAG, "Updated Cache Minutes To: " + (acct.getMinutesTotal() - acct.getMinutesUsed()));
             }
             else
             {

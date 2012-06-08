@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import android.graphics.drawable.ShapeDrawable;
+import android.text.format.DateFormat;
 
 import com.baker.vm.VMAccount;
 
@@ -41,10 +42,10 @@ public abstract class MinutesGraphDrawable extends ShapeDrawable
 	{
 		account = iAccount;
 
-		if (account != null && account.canParseMinutes())
+		if (account != null && account.isValid())
 		{
-			minutesPercent =
-				account.getMinutesUsedInt() / (float) account.getMinutesTotal();
+			minutesPercent = 
+				account.getMinutesUsed() / (float) account.getMinutesTotal();
 			hasMinutes = true;
 		}
 		else
@@ -53,9 +54,10 @@ public abstract class MinutesGraphDrawable extends ShapeDrawable
 			hasMinutes = false;
 		}
 		
-		if(account != null && account.canParseData())
+		if(account != null && account.isValid())
 		{
-			dataPercent = Float.parseFloat(account.getDataUsed()) / Float.parseFloat(account.getDataTotal());
+			//dataPercent = Float.parseFloat(account.getDataUsed()) / Float.parseFloat(account.getDataTotal());
+			dataPercent = account.getDataUsed() / (float) account.getDataTotal();
 			hasData = true;
 		}
 		else
@@ -64,9 +66,9 @@ public abstract class MinutesGraphDrawable extends ShapeDrawable
 			hasData = false;
 		}
 
-		if (account != null && account.canParseChargedOnDate())
+		if (account != null && account.isValid())
 		{
-			final Calendar end = account.getChargedOnCal();
+			final Calendar end = account.getNewMonthStarts(); // This will be more accurate for our timing, and should end the "negative time" problem
 			final Calendar start = (Calendar) end.clone();
 			start.add(Calendar.MONTH, -1);
             start.set(Calendar.HOUR_OF_DAY, 0);
@@ -89,7 +91,8 @@ public abstract class MinutesGraphDrawable extends ShapeDrawable
 
 	private String toString(final Calendar end)
 	{
-		return end.get(Calendar.MONTH) + "/" + end.get(Calendar.DAY_OF_MONTH) + "/" + end.get(Calendar.YEAR) + " " + end.get(Calendar.HOUR_OF_DAY) + ":" + end.get(Calendar.MINUTE);
+		//return end.get(Calendar.MONTH) + "/" + end.get(Calendar.DAY_OF_MONTH) + "/" + end.get(Calendar.YEAR) + " " + end.get(Calendar.HOUR_OF_DAY) + ":" + end.get(Calendar.MINUTE);
+		return DateFormat.format("MM/dd/yy", end).toString();
 	}
 
 	/**

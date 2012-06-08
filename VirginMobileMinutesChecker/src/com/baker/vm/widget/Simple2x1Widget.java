@@ -86,7 +86,7 @@ public final class Simple2x1Widget extends AppWidgetProvider
 
             // update balance
             views.setTextViewText(R.id.widget_currentbalanceview,
-                PreferencesUtil.getBalance(context));
+                String.format("$%.2f", PreferencesUtil.getBalance(context)));
 
             // update minutes used
             views.setTextViewText(R.id.widget_minutesusedview,

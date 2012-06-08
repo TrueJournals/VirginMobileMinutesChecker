@@ -17,8 +17,9 @@ import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
 
 public class WebsiteScraper {
 
-   public static String fetchScreen(String username, String password) {
+   public static String[] fetchScreen(String username, String password) {
       String line = "";
+      String dataPage = "";
 
       try {
          TrustManager[] trustAllCerts = new TrustManager[]{
@@ -82,19 +83,21 @@ public class WebsiteScraper {
             sb.append(line);
          }
 
+         /*
          int mainContentIndex = sb.indexOf("id=\"mainContent\"");
          if (mainContentIndex == -1) {
             line = "";
          } else {
             line = sb.substring(mainContentIndex);
          }
+         */
+         line = sb.toString();
          
          // Now, try to grab data usage
          String cookies = "";
          // 1. Grab and store cookies
          String headerName=null;
          for (int i=1; (headerName = connection.getHeaderFieldKey(i))!=null; i++) {
-        	 //if (headerName.equals("Set-Cookie")) {
         	 if(headerName.equalsIgnoreCase("Set-Cookie")) {
         		 String cookie = connection.getHeaderField(i);
         		 cookie = cookie.substring(0, cookie.indexOf(";"));
@@ -121,23 +124,24 @@ public class WebsiteScraper {
          buff = new BufferedReader(in);
      
          sb = new StringBuilder();
-     
-         String dataPage;
+         
          while ((dataPage = buff.readLine()) != null) {
         	 sb.append(dataPage);
          }
-          
+         
+         /*
          int dataContentIndex = sb.indexOf("id=\"mainContent\"");
          if (dataContentIndex == -1) {
         	 dataPage = "";
          } else {
         	 dataPage = sb.substring(dataContentIndex);
-         }
+         }*/
+         dataPage = sb.toString();
               
          // Simply concat the output with our data page output
-         if(line != null) {
-        	 line = line + dataPage;
-         }
+         //if(line != null) {
+         //	 line = line + dataPage;
+         //}
 
          connection.disconnect();
       } catch (Exception e) {
@@ -145,15 +149,18 @@ public class WebsiteScraper {
          //System.err.println("exception 83");
          //System.err.println(e.getMessage());
          //System.err.println(line);
-         return line;
+         return new String[] { line, dataPage };
          //rc.put("isValid", "FALSE");
       }
       //line = null;
       if (line == null) {
          line = "";
       }
+      if (dataPage == null) {
+    	  dataPage = "";
+      }
       //System.err.println(line);
-      return line;
+      return new String[] { line, dataPage };
    }
 
 
@@ -269,11 +276,11 @@ public class WebsiteScraper {
 
    public static Map<String, String> getInfo(String username, String password) {
 
-      String line = fetchScreen(username, password);
+      String[] pages = fetchScreen(username, password);
       // Log.d("DEBUG", "Line: "+line);
 
 
-      return parseInfo(line);
+      return parseInfo(pages[0]);
 
    }
 

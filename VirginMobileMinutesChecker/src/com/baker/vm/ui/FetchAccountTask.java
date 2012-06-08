@@ -85,12 +85,10 @@ public class FetchAccountTask
         ((ProgressBar) activity.findViewById(R.id.progress)).setMax(params.length);
         publishProgress();
 
-        final IVMCScraper scraper= new ReferenceScraper();
-
         final List<VMAccount> accts = new ArrayList<VMAccount>();
         for (final UsernamePassword a : params)
         {
-            final VMAccount acct = ScraperUtil.scrape(a, scraper);
+            final VMAccount acct = ScraperUtil.scrape(a);
 
             ++i;
             if (acct != null)

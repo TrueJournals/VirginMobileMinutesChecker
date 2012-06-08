@@ -9,6 +9,8 @@ import android.text.format.DateFormat;
 
 import com.baker.vm.ui.MultipleAccountsActivity;
 
+import java.util.GregorianCalendar;
+
 public final class PreferencesUtil
 {
     private PreferencesUtil()
@@ -22,12 +24,12 @@ public final class PreferencesUtil
     public static final String FLAG_VERSION_MESSAGE = "shownVersionMessage";
     /** Keys in cache preferences. */
     public static final String CACHE_TS = "cache_timestamp";
-    public static final String CACHE_AS_STRING = "cache_as_string";
+    //public static final String CACHE_AS_STRING = "cache_as_string";
     public static final String CACHE_MINUTES_USED = "cache_minutes_used";
     public static final String CACHE_MINUTES_TOTAL = "cache_minutes_total";
     public static final String CACHE_BALANCE = "cache_balance";
     public static final String CACHE_DUE_DATE = "cache_due_date";
-    public static final String CACHE_DATA = "cache_data";
+    public static final String CACHE_MONTH_STARTS = "cache_month_starts";
     public static final String CACHE_DATA_USED = "cache_data_used";
     public static final String CACHE_DATA_TOTAL = "cache_data_total";
 
@@ -58,12 +60,16 @@ public final class PreferencesUtil
 
     	final String phoneNumber = getDefaultTelephoneNumber(activity);
     	final String pass = getPassword(activity, phoneNumber);
+    	
+    	final GregorianCalendar monthStarts = new GregorianCalendar();
+    	monthStarts.setTimeInMillis(cache.getLong(CACHE_MONTH_STARTS, 0));
 
     	return VMAccount.createFromCache(new UsernamePassword(phoneNumber, pass),
-    			cache.getString(CACHE_AS_STRING, ""),
-    			cache.getString(CACHE_DUE_DATE, ""),
-    			cache.getString(CACHE_DATA_USED, ""),
-    			cache.getString(CACHE_DATA_TOTAL, ""));
+    			cache.getInt(CACHE_MINUTES_USED, 0),
+    			cache.getInt(CACHE_MINUTES_TOTAL, 0),
+    			cache.getInt(CACHE_DATA_USED, 0),
+    			cache.getInt(CACHE_DATA_TOTAL, 0),
+    			monthStarts);
     }
 
     public static SharedPreferences getCache(final Context activity)
@@ -71,14 +77,9 @@ public final class PreferencesUtil
         return activity.getSharedPreferences(CACHE_PREFS, 0);
     }
 
-    public static String getBalance(final Context context)
+    public static float getBalance(final Context context)
     {
-        return getCache(context).getString(CACHE_BALANCE, "");
-    }
-
-    public static String getMinutesString(final Context activity)
-    {
-        return getCache(activity).getString(CACHE_AS_STRING, "");
+        return getCache(context).getFloat(CACHE_BALANCE, -1);
     }
 
     public static int getMinutesUsed(final Context activity)
@@ -86,29 +87,29 @@ public final class PreferencesUtil
         return getCache(activity).getInt(CACHE_MINUTES_USED, -1);
     }
 
-    public static int getCacheMinutesTotal(final Context activity)
+    public static int getMinutesTotal(final Context activity)
     {
         return getCache(activity).getInt(CACHE_MINUTES_TOTAL, -1);
     }
 
-	public static String getDueDate(final Context context)
+	public static long getDueDate(final Context context)
 	{
-        return getCache(context).getString(CACHE_DUE_DATE, "");
+        return getCache(context).getLong(CACHE_DUE_DATE, -1);
 	}
 	
-	public static String getDataUsed(final Context context)
+	public static long getMonthStarts(final Context context)
 	{
-		return getCache(context).getString(CACHE_DATA_USED, "");
+		return getCache(context).getLong(CACHE_MONTH_STARTS, -1);
+	}
+
+	public static int getDataUsed(final Context context)
+	{
+		return getCache(context).getInt(CACHE_DATA_USED, -1);
 	}
 	
-	public static String getDataTotal(final Context context)
+	public static int getDataTotal(final Context context)
 	{
-		return getCache(context).getString(CACHE_DATA_TOTAL, "");
-	}
-	
-	public static String getData(final Context context)
-	{
-		return getCache(context).getString(CACHE_DATA, "");
+		return getCache(context).getInt(CACHE_DATA_TOTAL, -1);
 	}
 	
 	public static boolean getInboundCall(final Context context)
@@ -146,16 +147,16 @@ public final class PreferencesUtil
         final SharedPreferences cache = getCache(context);
 
         final Editor editor = cache.edit();
-
-        editor.putString(CACHE_AS_STRING, "");
+        
         editor.putInt(CACHE_MINUTES_USED, -1);
         editor.putInt(CACHE_MINUTES_TOTAL, -1);
 
-        editor.putString(CACHE_DUE_DATE, "");
-        editor.putString(CACHE_BALANCE, "");
-        editor.putString(CACHE_DATA, "");
-        editor.putString(CACHE_DATA_USED, "");
-        editor.putString(CACHE_DATA_TOTAL, "");
+        editor.putLong(CACHE_DUE_DATE, -1);
+        editor.putLong(CACHE_MONTH_STARTS, -1);
+        editor.putFloat(CACHE_BALANCE, -1);
+        
+        editor.putInt(CACHE_DATA_USED, -1);
+        editor.putInt(CACHE_DATA_TOTAL, -1);
     }
 
     public static void setCache(final Context activity, final VMAccount account)
@@ -171,24 +172,24 @@ public final class PreferencesUtil
         final Editor editor = cache.edit();
 
         // Handle minutes used
-        final String minutes = account.getMinutesUsed();
-        editor.putString(CACHE_AS_STRING, minutes);
+        //final String minutes = account.getMinutesUsed();
+        //editor.putString(CACHE_AS_STRING, minutes);
 
-        editor.putInt(CACHE_MINUTES_USED, account.getMinutesUsedInt());
+        editor.putInt(CACHE_MINUTES_USED, account.getMinutesUsed());
         editor.putInt(CACHE_MINUTES_TOTAL, account.getMinutesTotal());
 
         // Handle account balance
-        editor.putString(CACHE_BALANCE, account.getBalance());
+        editor.putFloat(CACHE_BALANCE, account.getBalance());
 
         // Handle due date
-        editor.putString(CACHE_DUE_DATE, account.getChargedOn());
+        editor.putLong(CACHE_DUE_DATE, account.getChargedOn().getTimeInMillis());
+        editor.putLong(CACHE_MONTH_STARTS, account.getNewMonthStarts().getTimeInMillis());
 
         editor.putLong(CACHE_TS, System.currentTimeMillis());
         
         // Handle data
-        editor.putString(CACHE_DATA, account.getDataUsed() + " / " + account.getDataTotal());
-        editor.putString(CACHE_DATA_USED, account.getDataUsed());
-        editor.putString(CACHE_DATA_TOTAL, account.getDataTotal());
+        editor.putInt(CACHE_DATA_USED, account.getDataUsed());
+        editor.putInt(CACHE_DATA_TOTAL, account.getDataTotal());
 
         editor.commit();
     }

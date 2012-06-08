@@ -24,25 +24,21 @@ public final class ScraperUtil
 
     public static VMAccount scrape(final UsernamePassword a)
     {
-        return scrape(a, new ReferenceScraper());
-    }
-
-    public static VMAccount scrape(final UsernamePassword a,
-                                   final IVMCScraper scraper)
-    {
         VMAccount acct = null;
 
         if (a.pass != null && a.pass.length() != 0)
         {
             try
             {
-                final String html= WebsiteScraper.fetchScreen(a.user, a.pass);
-                Log.d(TAG, html);
+                final String[] pages = WebsiteScraper.fetchScreen(a.user, a.pass);
+                IVMCScraper scraper = new ReferenceScraper(pages[0], pages[1]);
+                Log.d(TAG, pages[0]);
+                Log.d(TAG, pages[1]);
 
-                if (scraper.isValid(html))
+                if (scraper.isValid())
                 {
                     Log.d(TAG, "valid");
-                    acct = new VMAccount(a, html, scraper);
+                    acct = new VMAccount(a, scraper);
                 }
                 else
                 {
