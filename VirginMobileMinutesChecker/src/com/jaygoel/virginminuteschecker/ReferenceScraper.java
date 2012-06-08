@@ -66,7 +66,7 @@ public class ReferenceScraper implements IVMCScraper
     }
 
     @Override
-    public Calendar getChargedOn()
+    public Calendar getNewMonthStarts()
     {
     	Elements chargedOn = doc.select("#charge_date p");
     	String date = chargedOn.first().text();
@@ -79,7 +79,7 @@ public class ReferenceScraper implements IVMCScraper
     }
     
     @Override
-    public Calendar getNewMonthStarts()
+    public Calendar getChargedOn()
     {
     	Elements monthStarts = doc.select("#charge_date span");
     	String text = monthStarts.first().text();
