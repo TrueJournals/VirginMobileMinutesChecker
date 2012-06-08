@@ -258,7 +258,7 @@ public final class MultipleAccountsActivity extends Activity
                     dataUsed = PreferencesUtil.getDataUsed(this);
                     dataTotal = PreferencesUtil.getDataTotal(this);
                 }
-                addRow(table, R.string.currentBalance, String.format("%.2f", balance), widest, true);
+                addRow(table, R.string.currentBalance, String.format("$%.2f", balance), widest, true);
                 addRow(table, R.string.minutesUsed, String.format("%d / %d", minutesUsed, minutesTotal), widest, true);
                 addRow(table, R.string.dataUsed, String.format("%d / %d MB", dataUsed, dataTotal), widest, true);
                 addRow(table, R.string.chargedOn, DateFormat.format("MM/dd/yy", dueDate).toString(), widest, true);
@@ -305,9 +305,9 @@ public final class MultipleAccountsActivity extends Activity
                                          R.string.chargedOn,
                                          R.string.monthlyCharge,
                                          R.string.dataUsed);
-                addRow(table, R.string.currentBalance, String.valueOf(acct.getBalance()), widest, false);
-                addRow(table, R.string.minutesUsed, acct.getMinutesUsed() + " / " + acct.getMinutesTotal(), widest, false);
-                addRow(table, R.string.dataUsed, acct.getDataUsed() + " / " + acct.getDataTotal(), widest, false);
+                addRow(table, R.string.currentBalance, String.format("$%.2f", acct.getBalance()), widest, false);
+                addRow(table, R.string.minutesUsed, String.format("%d / %d", acct.getMinutesUsed(), acct.getMinutesTotal()), widest, false);
+                addRow(table, R.string.dataUsed, String.format("%d / %d MB", acct.getDataUsed(), acct.getDataTotal()), widest, false);
                 addRow(table, R.string.chargedOn, DateFormat.format("MM/dd/yy", acct.getChargedOn()).toString(), widest, false);
                 addRow(table, R.string.monthlyCharge, String.format("$%.2f", acct.getMonthlyCharge()), widest, false);
 
